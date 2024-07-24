@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import connection from '@/utils/db';
+import connection from '../../../utils/db';
 import { ResultSetHeader } from 'mysql2';
 
 
