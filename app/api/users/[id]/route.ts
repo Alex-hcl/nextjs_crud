@@ -1,12 +1,7 @@
 import { NextResponse } from 'next/server';
 import connection from '@/utils/db';
 
-// 获取单个用户
-export async function GET(request: Request, { params }: { params: { id: string } }) {
-  const { id } = params;
-  const [rows] = await connection.query('SELECT * FROM users WHERE id = ?', [id]);
-  return NextResponse.json(rows[0]);
-}
+
 
 // 更新用户
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
