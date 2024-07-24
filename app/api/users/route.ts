@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import connection from '@/utils/db';
+import { ResultSetHeader } from 'mysql2';
 
 
 // export async function GET() {
@@ -21,7 +22,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const { name, email } = await request.json();
-    const [result] = await connection.query('INSERT INTO users (name, email) VALUES (?, ?)', [name, email]);
+    const [result] = await connection.query<ResultSetHeader>('INSERT INTO users (name, email) VALUES (?, ?)', [name, email]);
     return NextResponse.json({ id: result.insertId, name, email });
   } catch (error) {
     console.error('Error adding user:', error);
