@@ -1,15 +1,25 @@
-'use client';
+"use client"; // 在文件的开头添加这行代码
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-export default function Home() {
-  const [users, setUsers] = useState([]);
+interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+export default function Page() {
+  const [users, setUsers] = useState<User[]>([]);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
 
   useEffect(() => {
-    axios.get('/api/users').then(response => setUsers(response.data));
+    const fetchUsers = async () => {
+      const response = await axios.get('/api/users');
+      setUsers(response.data);
+    };
+    fetchUsers();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -20,38 +30,31 @@ export default function Home() {
     setEmail('');
   };
 
-  const handleDelete = async (id: number) => {
-    await axios.delete(`/api/users/${id}`);
-    setUsers(users.filter((user: any) => user.id !== id));
-  };
-
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">用户列表</h1>
-      <form onSubmit={handleSubmit} className="mb-4">
+    <div className="p-4">
+      <form onSubmit={handleSubmit}>
         <input
           type="text"
-          placeholder="Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="border p-2 mr-2"
+          placeholder="Name"
+          className="border p-2 mb-2"
         />
         <input
           type="email"
-          placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="border p-2 mr-2"
+          placeholder="Email"
+          className="border p-2 mb-2"
         />
-        <button type="submit" className="bg-blue-500 text-white p-2">添加用户</button>
+        <button type="submit" className="bg-blue-500 text-white p-2">
+          Add User
+        </button>
       </form>
       <ul>
-        {users.map((user: any) => (
-          <li key={user.id} className="border p-2 mb-2 flex justify-between">
-            <div>
-              {user.name} ({user.email})
-            </div>
-            <button onClick={() => handleDelete(user.id)} className="bg-red-500 text-white p-2">删除</button>
+        {users.map((user) => (
+          <li key={user.id} className="border p-2 mb-2">
+            {user.name} ({user.email})
           </li>
         ))}
       </ul>
